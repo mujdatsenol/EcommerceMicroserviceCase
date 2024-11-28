@@ -3,6 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{42234F10-F3AD-4D23-8D49-7A004D6FD9D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DDDD18DC-33B5-4818-A74A-83702D7AAC17}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		.env = .env
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceMicroserviceCase.Order.Api", "EcommerceMicroserviceCase.Order.Api\EcommerceMicroserviceCase.Order.Api.csproj", "{8EEB52B8-C493-446C-821A-3FD4A91A6A8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceMicroserviceCase.Stock.Api", "EcommerceMicroserviceCase.Stock.Api\EcommerceMicroserviceCase.Stock.Api.csproj", "{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceMicroserviceCase.Notification.Api", "EcommerceMicroserviceCase.Notification.Api\EcommerceMicroserviceCase.Notification.Api.csproj", "{2EF92E41-CE3A-4CFB-BB29-B77BF0148262}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{7DD79B6E-E712-4C59-93F2-9CDE88D05D8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{295C4BAD-C4CE-43E5-A68E-254C018408EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceMicroserviceCase.Shared", "EcommerceMicroserviceCase.Shared\EcommerceMicroserviceCase.Shared.csproj", "{D17DA480-2D32-4EBB-AA49-8E2263269658}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "order", "order", "{3FB59B65-67D8-4642-9EE8-4C92B6D15E16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stock", "stock", "{54BCD420-C676-4DE2-88F3-134F551C59A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "notification", "notification", "{8622AE24-B43A-4600-8468-646E701B14EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +36,34 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7DD79B6E-E712-4C59-93F2-9CDE88D05D8E} = {42234F10-F3AD-4D23-8D49-7A004D6FD9D6}
+		{295C4BAD-C4CE-43E5-A68E-254C018408EE} = {42234F10-F3AD-4D23-8D49-7A004D6FD9D6}
+		{D17DA480-2D32-4EBB-AA49-8E2263269658} = {295C4BAD-C4CE-43E5-A68E-254C018408EE}
+		{3FB59B65-67D8-4642-9EE8-4C92B6D15E16} = {7DD79B6E-E712-4C59-93F2-9CDE88D05D8E}
+		{8EEB52B8-C493-446C-821A-3FD4A91A6A8A} = {3FB59B65-67D8-4642-9EE8-4C92B6D15E16}
+		{54BCD420-C676-4DE2-88F3-134F551C59A9} = {7DD79B6E-E712-4C59-93F2-9CDE88D05D8E}
+		{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23} = {54BCD420-C676-4DE2-88F3-134F551C59A9}
+		{8622AE24-B43A-4600-8468-646E701B14EE} = {7DD79B6E-E712-4C59-93F2-9CDE88D05D8E}
+		{2EF92E41-CE3A-4CFB-BB29-B77BF0148262} = {8622AE24-B43A-4600-8468-646E701B14EE}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EEB52B8-C493-446C-821A-3FD4A91A6A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EEB52B8-C493-446C-821A-3FD4A91A6A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EEB52B8-C493-446C-821A-3FD4A91A6A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EEB52B8-C493-446C-821A-3FD4A91A6A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1DCF88-74F8-4855-AEEF-9E9E3D703B23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF92E41-CE3A-4CFB-BB29-B77BF0148262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF92E41-CE3A-4CFB-BB29-B77BF0148262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF92E41-CE3A-4CFB-BB29-B77BF0148262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF92E41-CE3A-4CFB-BB29-B77BF0148262}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D17DA480-2D32-4EBB-AA49-8E2263269658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D17DA480-2D32-4EBB-AA49-8E2263269658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D17DA480-2D32-4EBB-AA49-8E2263269658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D17DA480-2D32-4EBB-AA49-8E2263269658}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
