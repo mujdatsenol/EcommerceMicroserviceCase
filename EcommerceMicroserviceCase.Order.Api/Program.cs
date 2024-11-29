@@ -1,3 +1,4 @@
+using EcommerceMicroserviceCase.Order.Api.Features.Orders;
 using EcommerceMicroserviceCase.Order.Api.Repositories.Extensions;
 using EcommerceMicroserviceCase.Shared.Extensions;
 using Scalar.AspNetCore;
@@ -10,6 +11,8 @@ builder.Services.AddRepositories();
 builder.Services.AddCommonServices(typeof(Program));
 
 var app = builder.Build();
+
+app.MapOrderEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

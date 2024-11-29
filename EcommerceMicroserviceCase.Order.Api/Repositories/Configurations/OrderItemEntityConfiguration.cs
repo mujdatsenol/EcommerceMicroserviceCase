@@ -1,12 +1,12 @@
-using Models = EcommerceMicroserviceCase.Order.Api.Features.Orders.Models;
+using Domain = EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EcommerceMicroserviceCase.Order.Api.Repositories.Configurations;
 
-public class OrderItemEntityConfiguration : IEntityTypeConfiguration<Models.OrderItem>
+public class OrderItemEntityConfiguration : IEntityTypeConfiguration<Domain.OrderItem>
 {
-    public void Configure(EntityTypeBuilder<Models.OrderItem> builder)
+    public void Configure(EntityTypeBuilder<Domain.OrderItem> builder)
     {
         builder.ToTable("OrderItem")
             .HasKey(x => x.Id);

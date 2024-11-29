@@ -14,7 +14,7 @@ public class GetProductByIdQuaryHandler(IRepository<Domain.Product> repository, 
     public async Task<ServiceResult<ProductDto>> Handle(
         GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await repository.GetByIdAsync(request.Id, cancellationToken);
+        var product = await repository.GetByIdAsync(request.Id, cancellationToken: cancellationToken);
         if (product is null)
         {
             return ServiceResult<ProductDto>.Error(

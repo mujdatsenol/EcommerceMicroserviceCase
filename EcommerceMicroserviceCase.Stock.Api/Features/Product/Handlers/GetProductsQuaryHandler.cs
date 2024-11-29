@@ -13,7 +13,7 @@ public class GetProductsQuaryHandler(IRepository<Domain.Product> repository, IMa
     public async Task<ServiceResult<List<ProductDto>>> Handle(
         GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await repository.GetAllAsync(cancellationToken);
+        var products = await repository.GetAllAsync(cancellationToken: cancellationToken);
         var productsDto = mapper.Map<List<ProductDto>>(products);
         return ServiceResult<List<ProductDto>>.SuccessAsOk(productsDto);
     }

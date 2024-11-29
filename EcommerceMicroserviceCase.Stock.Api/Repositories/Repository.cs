@@ -14,14 +14,28 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
         _dbSet = _dbContext.Set<TEntity>();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.ToListAsync(cancellationToken);
+        IQueryable<TEntity> query = _dbSet;
+        
+        if (include != null)
+        {
+            query = include(query);
+        }
+        
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetByIdAsync<T>(T id, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetByIdAsync<T>(T id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id, cancellationToken);
+        IQueryable<TEntity> query = _dbSet;
+
+        if (include != null)
+        {
+            query = include(query);
+        }
+        
+        return await query.FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
     public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)

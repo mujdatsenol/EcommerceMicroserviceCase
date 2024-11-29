@@ -1,6 +1,6 @@
 using EcommerceMicroserviceCase.Order.Api.Repositories;
 
-namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Models;
+namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
 
 public class Order : BaseEntity
 {
