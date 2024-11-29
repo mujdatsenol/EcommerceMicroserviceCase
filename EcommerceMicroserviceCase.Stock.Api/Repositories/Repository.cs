@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceMicroserviceCase.StockService.Api.Repositories;
@@ -13,38 +14,43 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
         _dbSet = _dbContext.Set<TEntity>();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetByIdAsync<T>(T id)
+    public async Task<TEntity?> GetByIdAsync<T>(T id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id, cancellationToken);
     }
 
-    public async Task AddAsync(TEntity entity)
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddAsync(entity);
+        return await _dbSet.AnyAsync(predicate, cancellationToken);
     }
 
-    public async Task UpdateAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddAsync(entity, cancellationToken);
+    }
+
+    public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _dbSet.Update(entity);
-        await SaveChangesAsync();
+        await SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync<T>(T id)
+    public async Task DeleteAsync<T>(T id, CancellationToken cancellationToken = default)
     {
-        var entity = await _dbSet.FindAsync(id);
+        var entity = await _dbSet.FindAsync(id, cancellationToken);
         if (entity != null)
         {
             _dbSet.Remove(entity);
         }
     }
 
-    public async Task SaveChangesAsync()
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

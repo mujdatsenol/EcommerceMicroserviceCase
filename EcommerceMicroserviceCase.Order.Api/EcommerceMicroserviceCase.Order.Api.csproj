@@ -29,4 +29,8 @@
       <Folder Include="Features\Orders\Queries\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\EcommerceMicroserviceCase.Shared\EcommerceMicroserviceCase.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

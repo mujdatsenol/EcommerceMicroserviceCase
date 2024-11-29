@@ -1,8 +1,8 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Products.Models;
+using EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories;
+namespace EcommerceMicroserviceCase.StockService.Api.Repositories.Extensions;
 
 public static class SeedData
 {
@@ -11,7 +11,6 @@ public static class SeedData
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         dbContext.Database.AutoTransactionBehavior = AutoTransactionBehavior.Never;
-        await dbContext.Database.MigrateAsync();
 
         if (!dbContext.Products.Any())
         {
