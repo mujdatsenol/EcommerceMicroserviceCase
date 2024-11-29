@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using Models = EcommerceMicroserviceCase.Order.Api.Features.Orders.Models;
+using Domain = EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
 
 namespace EcommerceMicroserviceCase.Order.Api.Repositories;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<Models.Order> Orders { get; set; }
-    public DbSet<Models.OrderItem> OrderItems { get; set; }
+    public DbSet<Domain.Order> Orders { get; set; }
+    public DbSet<Domain.OrderItem> OrderItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

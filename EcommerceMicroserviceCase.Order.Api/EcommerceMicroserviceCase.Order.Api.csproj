@@ -13,6 +13,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="NewId" Version="4.0.1" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
         <PackageReference Include="Scalar.AspNetCore" Version="1.2.44" />
     </ItemGroup>
@@ -24,9 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Orders\Commands\" />
-      <Folder Include="Features\Orders\Handlers\" />
-      <Folder Include="Features\Orders\Queries\" />
+      <ProjectReference Include="..\EcommerceMicroserviceCase.Shared\EcommerceMicroserviceCase.Shared.csproj" />
     </ItemGroup>
 
 </Project>

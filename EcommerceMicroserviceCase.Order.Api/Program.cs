@@ -1,5 +1,6 @@
-using EcommerceMicroserviceCase.Order.Api.Repositories;
-using Microsoft.EntityFrameworkCore;
+using EcommerceMicroserviceCase.Order.Api.Features.Orders;
+using EcommerceMicroserviceCase.Order.Api.Repositories.Extensions;
+using EcommerceMicroserviceCase.Shared.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,20 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddDatabaseService(builder.Configuration);
 builder.Services.AddRepositories();
+builder.Services.AddCommonServices(typeof(Program));
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-dbContext.Database.MigrateAsync().ContinueWith(x =>
-{
-    Console.WriteLine(x.IsFaulted
-        ? $"Migration failed: {x.Exception?.Message}"
-        : "Migration successful");
-});
+app.MapOrderEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
+    app.ApplyMigrations();
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {

@@ -1,4 +1,4 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Products.Models;
+using EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
