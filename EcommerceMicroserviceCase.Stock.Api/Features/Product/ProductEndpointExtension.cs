@@ -8,7 +8,10 @@ public static class ProductEndpointExtension
     {
         app.MapGroup("api/products")
             .WithName("Product")
-            .CreateProduct();
+            .CreateProduct()
+            .UpdateProduct()
+            .GetProducts()
+            .GetProductById();
         
         //.AddEndpointFilter<ValidationFilter>();
     }
