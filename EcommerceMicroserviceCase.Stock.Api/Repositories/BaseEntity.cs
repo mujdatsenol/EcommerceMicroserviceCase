@@ -1,4 +1,4 @@
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories;
+namespace EcommerceMicroserviceCase.Stock.Api.Repositories;
 
 public class BaseEntity
 {

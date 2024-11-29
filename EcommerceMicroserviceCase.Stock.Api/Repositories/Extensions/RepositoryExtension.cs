@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories.Extensions;
+namespace EcommerceMicroserviceCase.Stock.Api.Repositories.Extensions;
 
 public static class RepositoryExtension
 {

@@ -17,7 +17,9 @@ public class GetOrdersQuaryHandler(IRepository<Domain.Order> repository, IMapper
         var products = await repository.GetAllAsync(
             quary => quary.Include(e => e.OrderItems),
             cancellationToken);
+        
         var productsDto = mapper.Map<List<OrderDto>>(products);
+        
         return ServiceResult<List<OrderDto>>.SuccessAsOk(productsDto);
     }
 }

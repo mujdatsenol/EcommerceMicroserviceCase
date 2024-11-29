@@ -1,8 +1,8 @@
 using AutoMapper;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Commands;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Dto;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Dto;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Mappings;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Mappings;
 
 public class ProductMapping : Profile
 {

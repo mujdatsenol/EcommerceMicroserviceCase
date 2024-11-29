@@ -1,4 +1,4 @@
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Dto;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Dto;
 
 public record ProductDto(
     Guid Id,

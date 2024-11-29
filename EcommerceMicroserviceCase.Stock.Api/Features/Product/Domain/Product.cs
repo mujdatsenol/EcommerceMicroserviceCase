@@ -1,6 +1,6 @@
-using EcommerceMicroserviceCase.StockService.Api.Repositories;
+using EcommerceMicroserviceCase.Stock.Api.Repositories;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Domain;
 
 public class Product : BaseEntity
 {

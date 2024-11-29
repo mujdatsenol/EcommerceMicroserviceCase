@@ -1,8 +1,8 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories.Configurations;
+namespace EcommerceMicroserviceCase.Stock.Api.Repositories.Configurations;
 
 public class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
 {

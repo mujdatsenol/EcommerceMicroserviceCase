@@ -1,6 +1,6 @@
 using EcommerceMicroserviceCase.Shared;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Commands;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
 
 public record CreateProductCommand(
     string Name,

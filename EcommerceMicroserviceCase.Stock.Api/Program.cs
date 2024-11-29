@@ -1,6 +1,6 @@
 using EcommerceMicroserviceCase.Shared.Extensions;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product;
-using EcommerceMicroserviceCase.StockService.Api.Repositories.Extensions;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product;
+using EcommerceMicroserviceCase.Stock.Api.Repositories.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

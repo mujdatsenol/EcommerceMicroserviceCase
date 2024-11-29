@@ -1,8 +1,8 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Domain;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories.Extensions;
+namespace EcommerceMicroserviceCase.Stock.Api.Repositories.Extensions;
 
 public static class SeedData
 {

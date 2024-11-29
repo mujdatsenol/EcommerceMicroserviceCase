@@ -1,6 +1,6 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Endpoints;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Endpoints;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product;
 
 public static class ProductEndpointExtension
 {
