@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using RabbitMQ.Client;
 
 namespace EcommerceMicroserviceCase.Shared.Messaging;
@@ -15,6 +16,7 @@ public class RabbitMqPublisher(RabbitMqConnection rabbitMqConnection) : IMessage
     
     public async Task PublishExchangeMessageAsync(string exchangeName, string routingKey, object message)
     {
+        await rabbitMqConnection.StartAsync();
         var channel = rabbitMqConnection.CreateChannel();
         await channel.ExchangeDeclareAsync(
             exchangeName,
@@ -23,7 +25,8 @@ public class RabbitMqPublisher(RabbitMqConnection rabbitMqConnection) : IMessage
             autoDelete: false,
             arguments: null);
         
-        string serializeMessage = JsonSerializer.Serialize(message);
+        string serializeMessage = JsonSerializer.Serialize(message,
+            options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
         var body = Encoding.UTF8.GetBytes(serializeMessage);
         
         await channel.BasicPublishAsync(
@@ -38,6 +41,7 @@ public class RabbitMqPublisher(RabbitMqConnection rabbitMqConnection) : IMessage
     
     public async Task PublishQueueMessageAsync(string queueName, string message)
     {
+        await rabbitMqConnection.StartAsync();
         var channel = rabbitMqConnection.CreateChannel();
         await channel.QueueDeclareAsync(
             queueName,

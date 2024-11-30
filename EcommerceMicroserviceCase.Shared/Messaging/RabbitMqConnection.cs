@@ -2,10 +2,16 @@ using RabbitMQ.Client;
 
 namespace EcommerceMicroserviceCase.Shared.Messaging;
 
-public class RabbitMqConnection(string hostName) : IAsyncDisposable
+public class RabbitMqConnection(RabbitMqOption option) : IAsyncDisposable
 {
     private readonly IConnectionFactory _connectionFactory =
-        new ConnectionFactory { HostName = hostName};
+        new ConnectionFactory
+        {
+            HostName = option.HostName,
+            Port = option.Port,
+            UserName = option.UserName,
+            Password = option.Password
+        };
     private IConnection? _connection;
     private IChannel? _channel;
 
