@@ -4,6 +4,7 @@ using EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
 using EcommerceMicroserviceCase.Order.Api.Helpers;
 using EcommerceMicroserviceCase.Order.Api.Repositories;
 using EcommerceMicroserviceCase.Shared;
+using EcommerceMicroserviceCase.Shared.Messaging;
 using MassTransit;
 using MediatR;
 
@@ -12,6 +13,7 @@ namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Handlers;
 public class CreateOrderCommandhandler(
     IRepository<Domain.Order> repository,
     IRepository<OrderItem> orderItemRepository,
+    IMessagePublisher publisher,
     IMapper mapper)
     : IRequestHandler<CreateOrderCommand, ServiceResult<CreateOrderResponse>>
 {
@@ -37,9 +39,17 @@ public class CreateOrderCommandhandler(
         
         var response = new CreateOrderResponse(newOrder.Id, newOrder.OrderNumber);
         
-        // RabbitMQ'ya Stock servisi için sipariş geldi stoktan düş mesajı verilecek.
-        // RabbitMQ'ya Notification servisi için sipariş geldi mesaj gönder mesajı verilecek.
+        // RabbitMQ'ya Exchange mesaj gönder. (Stock ve Notification servisleri abone olup kendi kuyruklarından dinlesinler)
+        await CreateOrderMessage(newOrder, cancellationToken);
         
         return ServiceResult<CreateOrderResponse>.SuccessAsCreated(response, $"/api/orders/{response.Id}");
+    }
+
+    private async Task CreateOrderMessage(Domain.Order message, CancellationToken cancellationToken)
+    {
+        await publisher.PublishExchangeMessageAsync(
+            "create-order-exchange",
+            "create-order-queue",
+            message);
     }
 }

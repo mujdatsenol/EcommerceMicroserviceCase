@@ -1,7 +1,7 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Commands;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
 using FluentValidation;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Validators;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Validators;
 
 public class CreateProductValidator : AbstractValidator<CreateProductCommand>
 {

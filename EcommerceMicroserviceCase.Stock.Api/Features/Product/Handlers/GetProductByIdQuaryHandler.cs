@@ -1,12 +1,12 @@
 using System.Net;
 using AutoMapper;
 using EcommerceMicroserviceCase.Shared;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Dto;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Queries;
-using EcommerceMicroserviceCase.StockService.Api.Repositories;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Dto;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Queries;
+using EcommerceMicroserviceCase.Stock.Api.Repositories;
 using MediatR;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Handlers;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Handlers;
 
 public class GetProductByIdQuaryHandler(IRepository<Domain.Product> repository, IMapper mapper)
     : IRequestHandler<GetProductByIdQuery, ServiceResult<ProductDto>>

@@ -1,7 +1,7 @@
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Domain;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Repositories;
+namespace EcommerceMicroserviceCase.Stock.Api.Repositories;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {

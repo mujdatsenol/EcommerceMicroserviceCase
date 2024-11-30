@@ -1,9 +1,9 @@
 using EcommerceMicroserviceCase.Shared.Extensions;
 using EcommerceMicroserviceCase.Shared.Filters;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Commands;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
 using MediatR;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Endpoints;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Endpoints;
 
 public static class CreateProductEndpoint
 {

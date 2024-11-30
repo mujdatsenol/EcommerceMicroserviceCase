@@ -1,6 +1,8 @@
 using EcommerceMicroserviceCase.Shared.Extensions;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product;
-using EcommerceMicroserviceCase.StockService.Api.Repositories.Extensions;
+using EcommerceMicroserviceCase.Shared.Messaging;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Messaging;
+using EcommerceMicroserviceCase.Stock.Api.Repositories.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDatabaseService(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddCommonServices(typeof(Program));
+builder.Services.AddRabbitMqService();
+builder.Services.AddMessageConsumers();
 
 var app = builder.Build();
 

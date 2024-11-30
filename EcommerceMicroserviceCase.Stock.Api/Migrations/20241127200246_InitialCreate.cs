@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EcommerceMicroserviceCase.StockService.Api.Migrations
+namespace EcommerceMicroserviceCase.Stock.Api.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -1,10 +1,10 @@
 using AutoMapper;
 using EcommerceMicroserviceCase.Shared;
-using EcommerceMicroserviceCase.StockService.Api.Features.Product.Commands;
-using EcommerceMicroserviceCase.StockService.Api.Repositories;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
+using EcommerceMicroserviceCase.Stock.Api.Repositories;
 using MediatR;
 
-namespace EcommerceMicroserviceCase.StockService.Api.Features.Product.Handlers;
+namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Handlers;
 
 public class UpdateProductCommandHandler(IRepository<Domain.Product> repository, IMapper mapper)
     : IRequestHandler<UpdateProductCommand, ServiceResult>
