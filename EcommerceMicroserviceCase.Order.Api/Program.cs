@@ -1,4 +1,5 @@
 using EcommerceMicroserviceCase.Order.Api.Features.Orders;
+using EcommerceMicroserviceCase.Order.Api.Features.Outbox;
 using EcommerceMicroserviceCase.Order.Api.Repositories.Extensions;
 using EcommerceMicroserviceCase.Shared.Extensions;
 using EcommerceMicroserviceCase.Shared.Messaging;
@@ -11,6 +12,7 @@ builder.Services.AddDatabaseService(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddCommonServices(typeof(Program));
 builder.Services.AddRabbitMqService(builder.Configuration);
+builder.Services.AddOutboxMessaging(); // Mesajlar Outbox yöntem ile gönderiliyor.
 
 var app = builder.Build();
 

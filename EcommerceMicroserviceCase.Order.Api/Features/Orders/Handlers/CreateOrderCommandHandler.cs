@@ -1,6 +1,7 @@
+using System.Text.Json;
 using AutoMapper;
 using EcommerceMicroserviceCase.Order.Api.Features.Orders.Commands;
-using EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
+using EcommerceMicroserviceCase.Order.Api.Features.Outbox.Commands;
 using EcommerceMicroserviceCase.Order.Api.Helpers;
 using EcommerceMicroserviceCase.Order.Api.Repositories;
 using EcommerceMicroserviceCase.Shared;
@@ -13,7 +14,8 @@ namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Handlers;
 public class CreateOrderCommandHandler(
     IRepository<Domain.Order> repository,
     IMessagePublisher publisher,
-    IMapper mapper)
+    IMapper mapper,
+    IMediator mediator)
     : IRequestHandler<CreateOrderCommand, ServiceResult<CreateOrderResponse>>
 {
     public async Task<ServiceResult<CreateOrderResponse>> Handle(
@@ -38,17 +40,30 @@ public class CreateOrderCommandHandler(
         
         var response = new CreateOrderResponse(newOrder.Id, newOrder.OrderNumber);
         
-        // RabbitMQ'ya Exchange mesaj gönder. (Stock ve Notification servisleri abone olup kendi kuyruklarından dinlesinler)
-        await CreateOrderMessage(newOrder, cancellationToken);
+        // Outbox Message tablosuna diğer servislere gidecek mesaj için kayıt atılıyor.
+        var outbox = await mediator.Send(
+            new AddOutboxMessageCommand(
+                "OrderCreated",
+                JsonSerializer.Serialize(newOrder)),
+            cancellationToken);
+        
+        // INFO: Outbox pattern uygulandı. Kullanılmıyor!
+        // await CreateOrderMessage(newOrder, cancellationToken);
         
         return ServiceResult<CreateOrderResponse>.SuccessAsCreated(response, $"/api/orders/{response.Id}");
     }
 
-    private async Task CreateOrderMessage(Domain.Order message, CancellationToken cancellationToken)
+    [Obsolete]
+    private async Task CreateOrderMessage(Domain.Order message)
     {
+        // Önce Dead Letter Queue yoksa oluştur
+        await publisher.CreateDlqAsync("dlq-create-order-queue");
+        
         await publisher.PublishExchangeMessageAsync(
             "create-order-exchange",
             "create-order-queue",
-            message);
+            message,
+            dlqExchange: "dle-create-order-exchange",
+            dlqRoutingKey: "dlq-create-order-queue");
     }
 }

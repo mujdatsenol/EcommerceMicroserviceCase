@@ -17,11 +17,12 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
     {
         return Task.Run(() =>
         {
-            _ = CosumeAsync("create-order-queue", "create-order-exchange", stoppingToken);
+            _ = CosumeAsync("create-order-exchange", "create-order-queue", stoppingToken);
+            _ = ConsumeDlqAsync("dle-create-order-exchange", "dlq-create-order-queue", stoppingToken);
         }, stoppingToken);
     }
 
-    public async Task CosumeAsync(string queueName, string exchangeName, CancellationToken cancellationToken)
+    public async Task CosumeAsync(string exchangeName, string queueName, CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         var rabbitMqConnection = scope.ServiceProvider.GetRequiredService<RabbitMqConnection>();
@@ -66,6 +67,53 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
         };
 
         await channel.BasicConsumeAsync(queueName, autoAck: false, consumer, cancellationToken);
+    }
+
+    public async Task ConsumeDlqAsync(string dlqExchangeName, string dlQueueName, CancellationToken cancellationToken)
+    {
+        using var scope = scopeFactory.CreateScope();
+        var rabbitMqConnection = scope.ServiceProvider.GetRequiredService<RabbitMqConnection>();
+        
+        await rabbitMqConnection.StartAsync();
+        var channel = rabbitMqConnection.CreateChannel();
+        
+        await channel.ExchangeDeclareAsync(
+            dlqExchangeName,
+            ExchangeType.Fanout,
+            durable: true,
+            autoDelete: false,
+            arguments: null,
+            cancellationToken: cancellationToken);
+        
+        await channel.QueueDeclareAsync(
+            dlQueueName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null,
+            cancellationToken: cancellationToken);
+        
+        await channel.QueueBindAsync(
+            dlQueueName,
+            dlqExchangeName,
+            routingKey: string.Empty,
+            cancellationToken: cancellationToken);
+        
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (sender, args) =>
+        {
+            var message = Encoding.UTF8.GetString(args.Body.ToArray());
+            var messageBody = JsonSerializer.Deserialize<Order>(message,
+                options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
+            
+            Console.WriteLine($"DLQ Message received: {message}");
+
+            if (messageBody != null) await UpdateStock(messageBody);
+
+            await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken);
+        };
+
+        await channel.BasicConsumeAsync(dlQueueName, autoAck: false, consumer, cancellationToken);
     }
 
     private async Task UpdateStock(Order message)
