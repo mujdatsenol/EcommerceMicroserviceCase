@@ -22,10 +22,15 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Models.Order", b =>
+            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -53,7 +58,7 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
-            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Models.OrderItem", b =>
+            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain.OrderItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -89,9 +94,9 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
                     b.ToTable("OrderItem", (string)null);
                 });
 
-            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Models.OrderItem", b =>
+            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain.OrderItem", b =>
                 {
-                    b.HasOne("EcommerceMicroserviceCase.Order.Api.Features.Orders.Models.Order", "Order")
+                    b.HasOne("EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -100,7 +105,7 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Models.Order", b =>
+            modelBuilder.Entity("EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });

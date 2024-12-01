@@ -6,7 +6,7 @@ using MediatR;
 
 namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Handlers;
 
-public class UpdateProductCommandHandler(IRepository<Domain.Product> repository, IMapper mapper)
+public class UpdateProductCommandHandler(IRepository<Domain.Product> repository)
     : IRequestHandler<UpdateProductCommand, ServiceResult>
 {
     public async Task<ServiceResult> Handle(UpdateProductCommand request, CancellationToken cancellationToken)

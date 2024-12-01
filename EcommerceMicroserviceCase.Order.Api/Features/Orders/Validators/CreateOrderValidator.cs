@@ -9,11 +9,16 @@ public class CreateOrderValidator : AbstractValidator<CreateOrderCommand>
     {
         RuleFor(x => x.CustomerName)
             .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-            .Length(2, 50).WithMessage("{{PropertyName} must be between 3 and 100 characters");
+            .Length(2, 50).WithMessage("{{PropertyName} must be between 2 and 50 characters");
         
         RuleFor(x => x.CustomerSurname)
             .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-            .Length(2, 50).WithMessage("{{PropertyName} must be between 3 and 100 characters");
+            .Length(2, 50).WithMessage("{{PropertyName} must be between 2 and 50 characters");
+        
+        RuleFor(x => x.CustomerEmail)
+            .NotEmpty().WithMessage("{PropertyName} cannot be empty")
+            .EmailAddress().WithMessage("{PropertyName} is invalid")
+            .Length(5, 100).WithMessage("{{PropertyName} must be between 5 and 100 characters");
 
         RuleFor(x => x.OrderItems)
             .NotEmpty().WithMessage("{PropertyName} cannot be empty. Must contain at least one item.")

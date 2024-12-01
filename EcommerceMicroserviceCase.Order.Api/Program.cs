@@ -10,7 +10,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDatabaseService(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddCommonServices(typeof(Program));
-builder.Services.AddRabbitMqService();
+builder.Services.AddRabbitMqService(builder.Configuration);
 
 var app = builder.Build();
 

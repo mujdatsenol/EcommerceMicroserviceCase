@@ -42,6 +42,21 @@ services:
       POSTGRES_USER: ${POSTGRES_DB_DEFAULT_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
 
+  postgres-db-notification:
+    image: postgres:17
+    container_name: ${POSTGRES_DB_NOTIFICATION_HOST}
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-db-notification-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_NOTIFICATION_NAME}
+      POSTGRES_USER: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: postgres-admin-ui
@@ -67,7 +82,7 @@ services:
 #    networks:
 #      - ecommerce_network
 #    ports:
-#      - "5265:8080"
+#      - "5001:5001"
 #    depends_on:
 #      - postgres-db-stock
 #      - rabbitmq
@@ -76,6 +91,10 @@ services:
 #      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
 #      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
 #      POSTGRES_DB_NAME: ${POSTGRES_DB_STOCK_NAME}
+#      RABBITMQ__HOST: ${RABBITMQ_HOST}
+#      RABBITMQ__PORT: ${RABBITMQ_PORT}
+#      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+#      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
 #      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
 #    command: >
 #      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_STOCK_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Stock.Api.dll"
@@ -88,7 +107,7 @@ services:
 #    networks:
 #      - ecommerce_network
 #    ports:
-#      - "5266:8090"
+#      - "5002:5002"
 #    depends_on:
 #      - postgres-db-order
 #      - rabbitmq
@@ -97,14 +116,43 @@ services:
 #      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
 #      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
 #      POSTGRES_DB_NAME: ${POSTGRES_DB_ORDER_NAME}
+#      RABBITMQ__HOST: ${RABBITMQ_HOST}
+#      RABBITMQ__PORT: ${RABBITMQ_PORT}
+#      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+#      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
 #      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
 #    command: >
 #      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_ORDER_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Order.Api.dll"
 #
+#  notification-api:
+#    build:
+#      context: .
+#      dockerfile: EcommerceMicroserviceCase.Notification.Api/Dockerfile
+#    container_name: notification-api
+#    networks:
+#      - ecommerce_network
+#    ports:
+#      - "5003:5003"
+#    depends_on:
+#      - postgres-db-notification
+#      - rabbitmq
+#    environment:
+#      POSTGRES_DB_HOST: ${POSTGRES_DB_NOTIFICATION_HOST}
+#      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
+#      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+#      POSTGRES_DB_NAME: ${POSTGRES_DB_NOTIFICATION_NAME}
+#      RABBITMQ__HOST: ${RABBITMQ_HOST}
+#      RABBITMQ__PORT: ${RABBITMQ_PORT}
+#      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+#      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+#      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
+#    command: >
+#      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Notification.Api.dll"
 
 volumes:
   postgres-db-stock-data:
   postgres-db-order-data:
+  postgres-db-notification-data:
   pgadmin-data:
 
 networks:

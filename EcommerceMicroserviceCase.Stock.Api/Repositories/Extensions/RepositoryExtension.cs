@@ -7,9 +7,20 @@ public static class RepositoryExtension
     public static IServiceCollection AddDatabaseService(
         this IServiceCollection services, IConfiguration configuration)
     {
+        string? connectionString = configuration.GetConnectionString("DefaultConnection");
+        bool isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+        if (isDocker)
+        {
+            string? host = configuration["POSTGRES_DB_STOCK_HOST"];
+            string? db = configuration["POSTGRES_DB_STOCK_NAME"];
+            string? user = configuration["POSTGRES_DB_DEFAULT_USERNAME"];
+            string? pass = configuration["POSTGRES_DB_DEFAULT_PASSWORD"];
+            connectionString = $"Host={host};Port=5432;Database={db};Username={user};Password={pass};";
+        }
+        
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(connectionString);
         });
         
         return services;

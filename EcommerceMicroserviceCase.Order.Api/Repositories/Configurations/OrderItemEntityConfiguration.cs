@@ -14,6 +14,9 @@ public class OrderItemEntityConfiguration : IEntityTypeConfiguration<Domain.Orde
         builder.Property(x => x.Id)
             .ValueGeneratedNever();
         
+        builder.Property(x => x.OrderId)
+            .IsRequired();
+        
         builder.Property(x => x.ProductId)
             .IsRequired();
         
