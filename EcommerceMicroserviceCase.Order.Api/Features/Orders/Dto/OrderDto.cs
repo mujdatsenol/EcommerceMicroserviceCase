@@ -5,6 +5,7 @@ public record OrderDto(
     string OrderNumber,
     string CustomerName,
     string CustomerSurname,
+    string CustomerEmail,
     DateTimeOffset OrderDate,
     decimal TotalPrice,
     List<OrderItemDto> OrderItems);

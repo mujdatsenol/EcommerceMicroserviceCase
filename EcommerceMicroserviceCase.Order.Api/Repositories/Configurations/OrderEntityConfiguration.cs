@@ -26,6 +26,10 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<Domain.Order>
             .IsRequired()
             .HasMaxLength(50);
         
+        builder.Property(x => x.CustomerEmail)
+            .IsRequired()
+            .HasMaxLength(100);
+        
         builder.Property(x => x.OrderDate)
             .IsRequired()
             .HasColumnType("timestamptz");

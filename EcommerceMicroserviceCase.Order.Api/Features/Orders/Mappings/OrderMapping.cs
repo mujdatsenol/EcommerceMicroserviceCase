@@ -17,6 +17,7 @@ public class OrderMapping : Profile
                 x.OrderNumber,
                 x.CustomerName,
                 x.CustomerSurname,
+                x.CustomerEmail,
                 x.OrderDate,
                 x.TotalAmount,
                 x.OrderItems.Select(s => new OrderItemDto(

@@ -10,9 +10,8 @@ using MediatR;
 
 namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Handlers;
 
-public class CreateOrderCommandhandler(
+public class CreateOrderCommandHandler(
     IRepository<Domain.Order> repository,
-    IRepository<OrderItem> orderItemRepository,
     IMessagePublisher publisher,
     IMapper mapper)
     : IRequestHandler<CreateOrderCommand, ServiceResult<CreateOrderResponse>>
@@ -34,8 +33,8 @@ public class CreateOrderCommandhandler(
         });
         newOrder.TotalAmount = newOrder.OrderItems.Sum(x => x.Subtotal);
         
-        await repository.AddAsync(newOrder);
-        await repository.SaveChangesAsync();
+        await repository.AddAsync(newOrder, cancellationToken);
+        await repository.SaveChangesAsync(cancellationToken);
         
         var response = new CreateOrderResponse(newOrder.Id, newOrder.OrderNumber);
         

@@ -2,8 +2,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EcommerceMicroserviceCase.Shared.Messaging;
+using EcommerceMicroserviceCase.Stock.Api.Features.Product.Commands;
 using EcommerceMicroserviceCase.Stock.Api.Features.Product.Messaging.Models;
-using EcommerceMicroserviceCase.Stock.Api.Repositories;
+using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -70,21 +71,19 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
     private async Task UpdateStock(Order message)
     {
         using var scope = scopeFactory.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository<Domain.Product>>();
-        
-        var ids = message.OrderItems.Select(s => s.ProductId).ToList();
-        var products = await repository.GetByQueryAsync(q =>
-            ids.Contains(q.Id));
-        
-        foreach (var product in products)
-        {
-            var orderItem = message.OrderItems.SingleOrDefault(w => w.ProductId == product.Id);
-            if (orderItem != null)
-            {
-                product.Quantity -= orderItem.Quantity;
-            }
-        }
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        await repository.UpdateRangeAsync(products);
+        IDictionary<Guid, int> productsIds = message.OrderItems
+            .ToDictionary(d => d.ProductId, d => d.Quantity);
+        
+        var requestResult = await mediator.Send(new UpdateProductsQuantityCommand(productsIds));
+        if (requestResult.Success)
+        {
+            Console.WriteLine("Products quantity updated");
+        }
+        else
+        {
+            throw new Exception("Products quantity update failed");
+        }
     }
 }
