@@ -1,4 +1,5 @@
 using EcommerceMicroserviceCase.Shared.Extensions;
+using EcommerceMicroserviceCase.Shared.Logger;
 using EcommerceMicroserviceCase.Shared.Messaging;
 using EcommerceMicroserviceCase.Stock.Api.Features.Product;
 using EcommerceMicroserviceCase.Stock.Api.Features.Product.Messaging;
@@ -13,6 +14,7 @@ builder.Services.AddRepositories();
 builder.Services.AddCommonServices(typeof(Program));
 builder.Services.AddRabbitMqService(builder.Configuration);
 builder.Services.AddMessageConsumers();
+builder.Services.AddLogger(builder.Configuration);
 
 var app = builder.Build();
 

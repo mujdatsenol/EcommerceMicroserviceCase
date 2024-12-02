@@ -2,6 +2,7 @@ using EcommerceMicroserviceCase.Order.Api.Features.Outbox.Commands;
 using EcommerceMicroserviceCase.Order.Api.Features.Outbox.Queries;
 using EcommerceMicroserviceCase.Shared.Messaging;
 using MediatR;
+using Serilog;
 
 namespace EcommerceMicroserviceCase.Order.Api.Features.Outbox;
 
@@ -38,6 +39,7 @@ public class OutboxMessageProcessor(
                         message,
                         dlqExchange,
                         dlqRoutingKey);
+                    Log.Information($"Send outbox message to Exchange. Id: {message.Id} - EventType: {message.EventType}");
                     
                     await mediator.Send(new MarkMessageAsProcessedCommand(message.Id), stoppingToken);
                 }
@@ -47,9 +49,9 @@ public class OutboxMessageProcessor(
 
                     if (message.RetryCount >= 5)
                     {
-                        Console.WriteLine("The message is forwarded to Dead Letter Queue...");
                         // 5. kez hata almışsa DLQ'ya manuel gönderme işlemi.
                         await publisher.PublishMessageToDlqAsync(dlqRoutingKey, message);
+                        Log.Warning($"The outbox message is forwarded to Dead Letter Queue... Id: {message.Id} - EventType: {message.EventType}");
                     }
                 }
             }
