@@ -8,6 +8,7 @@ using EcommerceMicroserviceCase.Shared.Messaging;
 using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Serilog;
 
 namespace EcommerceMicroserviceCase.Notification.Api.Features.Email.Messaging.Consumers;
 
@@ -60,7 +61,7 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
             var messageBody = JsonSerializer.Deserialize<Order>(message,
                 options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
             
-            Console.WriteLine($"Message received: {message}");
+            Log.Information($"Message received: {message}");
 
             if (messageBody != null) await SendMail(messageBody);
 
@@ -107,7 +108,7 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
             var messageBody = JsonSerializer.Deserialize<Order>(message,
                 options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
             
-            Console.WriteLine($"DLQ Message received: {message}");
+            Log.Information($"DLQ Message received: {message}");
 
             if (messageBody != null) await SendMail(messageBody);
 
@@ -140,12 +141,13 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
         var requestResult = await mediator.Send(createEmailRequest);
         if (requestResult.Success)
         {
-            Console.WriteLine("Sending email...");
-            Console.WriteLine($"Email sent to customer: {message.CustomerName} {message.CustomerSurname} - {message.CustomerEmail}");
-            Console.WriteLine($"For email details, please see here: {requestResult.UrlAsCreated}");
+            Log.Debug("Sending email...");
+            Log.Information($"Email sent to customer: {message.CustomerName} {message.CustomerSurname} - {message.CustomerEmail}");
+            Log.Information($"For email details, please see here: {requestResult.UrlAsCreated}");
         }
         else
         {
+            Log.Error("Failed to sent email");
             throw new Exception("Failed to sent email");
         }
     }

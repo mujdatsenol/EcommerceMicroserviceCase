@@ -7,6 +7,7 @@ using EcommerceMicroserviceCase.Stock.Api.Features.Product.Messaging.Models;
 using MediatR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Serilog;
 
 namespace EcommerceMicroserviceCase.Stock.Api.Features.Product.Messaging.Consumers;
 
@@ -59,7 +60,7 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
             var messageBody = JsonSerializer.Deserialize<Order>(message,
                 options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
             
-            Console.WriteLine($"Message received: {message}");
+            Log.Information($"Message received: {message}");
 
             if (messageBody != null) await UpdateStock(messageBody);
 
@@ -106,7 +107,7 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
             var messageBody = JsonSerializer.Deserialize<Order>(message,
                 options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
             
-            Console.WriteLine($"DLQ Message received: {message}");
+            Log.Information($"DLQ Message received: {message}");
 
             if (messageBody != null) await UpdateStock(messageBody);
 
@@ -127,10 +128,11 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
         var requestResult = await mediator.Send(new UpdateProductsQuantityCommand(productsIds));
         if (requestResult.Success)
         {
-            Console.WriteLine("Products quantity updated");
+            Log.Information("Products quantity updated");
         }
         else
         {
+            Log.Error("Products quantity update failed");
             throw new Exception("Products quantity update failed");
         }
     }

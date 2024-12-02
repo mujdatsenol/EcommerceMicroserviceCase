@@ -73,6 +73,31 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USERNAME}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.5
+    container_name: elasticsearch
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.5
+    container_name: kibana
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
 
 #  stock-api:
 #    build:
@@ -95,6 +120,8 @@ services:
 #      RABBITMQ__PORT: ${RABBITMQ_PORT}
 #      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
 #      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+#      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+#      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
 #      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
 #    command: >
 #      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_STOCK_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Stock.Api.dll"
@@ -120,6 +147,8 @@ services:
 #      RABBITMQ__PORT: ${RABBITMQ_PORT}
 #      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
 #      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+#      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+#      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
 #      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
 #    command: >
 #      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_ORDER_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Order.Api.dll"
@@ -145,6 +174,8 @@ services:
 #      RABBITMQ__PORT: ${RABBITMQ_PORT}
 #      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
 #      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+#      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+#      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
 #      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
 #    command: >
 #      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Notification.Api.dll"
@@ -154,6 +185,7 @@ volumes:
   postgres-db-order-data:
   postgres-db-notification-data:
   pgadmin-data:
+  elasticsearch-data:
 
 networks:
   ecommerce_network:

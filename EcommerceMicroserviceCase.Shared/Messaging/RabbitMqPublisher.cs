@@ -106,7 +106,7 @@ public class RabbitMqPublisher(RabbitMqConnection rabbitMqConnection) : IMessage
             durable: true,
             exclusive: false,
             autoDelete: false,
-            arguments: null); 
+            arguments: null);
 
         await Task.CompletedTask;
     }
