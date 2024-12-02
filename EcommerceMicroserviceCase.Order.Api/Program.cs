@@ -15,6 +15,7 @@ builder.Services.AddCommonServices(typeof(Program));
 builder.Services.AddRabbitMqService(builder.Configuration);
 builder.Services.AddOutboxMessaging(); // Mesajlar Outbox yöntem ile gönderiliyor.
 builder.Services.AddLogger(builder.Configuration);
+builder.Services.ConfigureCors();
 
 var app = builder.Build();
 
@@ -28,6 +29,7 @@ if (app.Environment.IsDevelopment())
     {
         options.WithTitle("Order API");
     });
+    app.UseCors();
 }
 
 app.Run();

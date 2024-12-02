@@ -1,6 +1,6 @@
-@HostAddress = http://localhost:5040
+@Host = http://localhost:7001
 
-GET {{HostAddress}}/weatherforecast/
+GET {{Host}}/api/products
 Accept: application/json
 
 ###

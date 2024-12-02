@@ -31,7 +31,7 @@ RUN dotnet ef database update
 # Base image (Uygulamanın çalışacağı imaj)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-EXPOSE 5003
+EXPOSE 7003
 
 # Publish edilmiş uygulamayı son image'a kopyalanması
 COPY --from=publish /app/publish .

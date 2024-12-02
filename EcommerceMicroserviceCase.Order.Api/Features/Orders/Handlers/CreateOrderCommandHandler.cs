@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using AutoMapper;
 using EcommerceMicroserviceCase.Order.Api.Features.Orders.Commands;
 using EcommerceMicroserviceCase.Order.Api.Features.Outbox.Commands;
@@ -50,7 +51,11 @@ public class CreateOrderCommandHandler(
             var outbox = await mediator.Send(
                 new AddOutboxMessageCommand(
                     "OrderCreated",
-                    JsonSerializer.Serialize(newOrder)),
+                    JsonSerializer.Serialize(newOrder,
+                        options: new JsonSerializerOptions
+                        {
+                            ReferenceHandler = ReferenceHandler.Preserve,
+                        })),
                 cancellationToken);
             if (outbox.IsFail)
             {

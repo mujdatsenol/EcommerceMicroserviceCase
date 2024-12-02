@@ -18,7 +18,7 @@ public static class SeedData
             {
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-5f51-0000-000000000000"),
                     Name = "Kazak",
                     Description = "Kazak açıklaması",
                     Price = 799.99m,
@@ -27,7 +27,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a1e-0000-000000000000"),
                     Name = "Hırka",
                     Description = "Hırka açıklaması",
                     Price = 1299.99m,
@@ -36,7 +36,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a2b-0000-000000000000"),
                     Name = "Pantolon",
                     Description = "Pantolon açıklaması",
                     Price = 950.50m,
@@ -45,7 +45,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a2c-0000-000000000000"),
                     Name = "Ceket",
                     Description = "Ceket açıklaması",
                     Price = 2455.25m,
@@ -54,7 +54,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a2e-0000-000000000000"),
                     Name = "Gömlek",
                     Description = "Gömlek açıklaması",
                     Price = 1350.29m,
@@ -63,7 +63,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a40-0000-000000000000"),
                     Name = "Kravat",
                     Description = "Kravat açıklaması",
                     Price = 385.35m,
@@ -72,7 +72,7 @@ public static class SeedData
                 },
                 new()
                 {
-                    Id = NewId.NextSequentialGuid(),
+                    Id = Guid.Parse("08dd1301-6e1d-6a41-0000-000000000000"),
                     Name = "Çorap",
                     Description = "Çorap açıklaması",
                     Price = 85.75m,
