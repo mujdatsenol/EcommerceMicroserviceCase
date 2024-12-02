@@ -19,12 +19,29 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
                     OrderNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     CustomerName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     CustomerSurname = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CustomerEmail = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     OrderDate = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Outbox",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EventType = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Payload = table.Column<string>(type: "jsonb", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
+                    Processed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    RetryCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Outbox", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,6 +79,9 @@ namespace EcommerceMicroserviceCase.Order.Api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "OrderItem");
+
+            migrationBuilder.DropTable(
+                name: "Outbox");
 
             migrationBuilder.DropTable(
                 name: "Order");

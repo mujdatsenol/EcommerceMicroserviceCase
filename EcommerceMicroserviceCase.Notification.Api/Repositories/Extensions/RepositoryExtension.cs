@@ -11,10 +11,10 @@ public static class RepositoryExtension
         bool isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
         if (isDocker)
         {
-            string? host = configuration["POSTGRES_DB_NOTIFICATION_HOST"];
-            string? db = configuration["POSTGRES_DB_NOTIFICATION_NAME"];
-            string? user = configuration["POSTGRES_DB_DEFAULT_USERNAME"];
-            string? pass = configuration["POSTGRES_DB_DEFAULT_PASSWORD"];
+            string? host = configuration["POSTGRES_DB_HOST"];
+            string? db = configuration["POSTGRES_DB_NAME"];
+            string? user = configuration["POSTGRES_DB_USERNAME"];
+            string? pass = configuration["POSTGRES_DB_PASSWORD"];
             connectionString = $"Host={host};Port=5432;Database={db};Username={user};Password={pass};";
         }
         

@@ -15,6 +15,12 @@ namespace EcommerceMicroserviceCase.Notification.Api.Features.Email.Messaging.Co
 public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
     : BackgroundService, IMessageConsumer
 {
+    private readonly JsonSerializerOptions _jsonSerializerOptions =
+        new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+    
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         return Task.Run(() =>
@@ -58,14 +64,26 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
         consumer.ReceivedAsync += async (sender, args) =>
         {
             var message = Encoding.UTF8.GetString(args.Body.ToArray());
-            var messageBody = JsonSerializer.Deserialize<Order>(message,
-                options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
-            
-            Log.Information($"Message received: {message}");
-
-            if (messageBody != null) await SendMail(messageBody);
-
-            await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken);
+            var messageBody = JsonSerializer.Deserialize<OutboxMessage>(message, _jsonSerializerOptions);
+            if (messageBody != null)
+            {
+                var order = JsonSerializer.Deserialize<Order>(messageBody.Payload, _jsonSerializerOptions);
+                if (order != null)
+                {
+                    Log.Information($"Notification service received message. " +
+                                    $"Exchange: {exchangeName} | Queue: {queueName} | Message: {message}");
+                    await SendMail(order);
+                    await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken);
+                }
+                else
+                {
+                    Log.Error("Message body payload could not be deserialized.");
+                }
+            }
+            else
+            {
+                Log.Error("Message could not be deserialized. Message body was null.");
+            }
         };
 
         await channel.BasicConsumeAsync(queueName, autoAck: false, consumer, cancellationToken);
@@ -105,14 +123,26 @@ public class CreateOrderConsumer(IServiceScopeFactory scopeFactory)
         consumer.ReceivedAsync += async (sender, args) =>
         {
             var message = Encoding.UTF8.GetString(args.Body.ToArray());
-            var messageBody = JsonSerializer.Deserialize<Order>(message,
-                options: new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve, });
-            
-            Log.Information($"DLQ Message received: {message}");
-
-            if (messageBody != null) await SendMail(messageBody);
-
-            await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken);
+            var messageBody = JsonSerializer.Deserialize<OutboxMessage>(message, _jsonSerializerOptions);
+            if (messageBody != null)
+            {
+                var order = JsonSerializer.Deserialize<Order>(messageBody.Payload, _jsonSerializerOptions);
+                if (order != null)
+                {
+                    Log.Information($"Notification service received DLQ message. " +
+                                    $"Exchange: {dlqExchangeName} | Queue: {dlQueueName} | Message: {message}");
+                    await SendMail(order);
+                    await channel.BasicAckAsync(args.DeliveryTag, multiple: false, cancellationToken);
+                }
+                else
+                {
+                    Log.Error("DLQ Message body payload could not be deserialized.");
+                }
+            }
+            else
+            {
+                Log.Error("DLQ Message could not be deserialized. Message body was null.");
+            }
         };
 
         await channel.BasicConsumeAsync(dlQueueName, autoAck: false, consumer, cancellationToken);
