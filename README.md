@@ -105,10 +105,10 @@ Bütün api endpointleri scalar aracılığı ile görülebilir.
 | `customerEmail`                   | `string`   | √       | Müşteri E-posta adresi |
 | `orderItems[]`                    | `dataList` | √       | Ürün bilgileri         |
 | `orderItems[].productId`          | `Guid`     | √       | Ürün Id                |
-| `orderItems[].productName`        | `string`   | √       | Ürün Id                |
-| `orderItems[].productDescription` | `string`   | √       | Ürün Id                |
-| `orderItems[].quantity`           | `int`      | √       | Ürün Id                |
-| `orderItems[].unitPrice`          | `decimal`  | √       | Ürün Id                |
+| `orderItems[].productName`        | `string`   | √       | Ürün adı               |
+| `orderItems[].productDescription` | `string`   | √       | Ürün açıklaması        |
+| `orderItems[].quantity`           | `int`      | √       | Ürün miktarı           |
+| `orderItems[].unitPrice`          | `decimal`  | √       | Ürün birim fiyatı      |
 
 ## Notification API Kullanımı
 
