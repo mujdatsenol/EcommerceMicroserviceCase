@@ -1,6 +1,43 @@
 @Host = http://localhost:7001
+@Root = api
+@ProductEndpoint = products
+@Id = 08dd1311-d9e5-19eb-0000-000000000000
 
-GET {{Host}}/api/products
+POST {{Host}}/{{Root}}/{{ProductEndpoint}}
 Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{
+  "name": "Test Ürün",
+  "description": "Test ürün açıklaması",
+  "price": 850.12,
+  "quantity": 115
+}
+
+###
+
+PUT {{Host}}/{{Root}}/{{ProductEndpoint}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{
+  "id": "{{Id}}",
+  "name": "Test Ürün 2",
+  "description": "Test ürün 2 açıklaması",
+  "price": 120.12,
+  "quantity": 55
+}
+
+###
+
+GET {{Host}}/{{Root}}/{{ProductEndpoint}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+###
+
+GET {{Host}}/{{Root}}/{{ProductEndpoint}}/{{Id}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
 
 ###

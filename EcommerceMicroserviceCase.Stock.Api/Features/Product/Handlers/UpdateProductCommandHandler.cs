@@ -24,6 +24,7 @@ public class UpdateProductCommandHandler(IRepository<Domain.Product> repository)
             product.Name = request.Name;
             product.Description = request.Description;
             product.Price = request.Price;
+            product.Quantity = request.Quantity;
         
             await repository.UpdateAsync(product, cancellationToken);
             

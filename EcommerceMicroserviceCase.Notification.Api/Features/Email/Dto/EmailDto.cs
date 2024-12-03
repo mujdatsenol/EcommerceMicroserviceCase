@@ -11,6 +11,6 @@ public record EmailDto(
     string OrderNumber,
     string CustomerName,
     string CustomerSurname,
-    DateTime OrderDate,
+    DateTimeOffset OrderDate,
     decimal TotalAmount,
-    List<OrderItemDto> OrderItems);
+    IEnumerable<OrderItemDto> OrderItems);

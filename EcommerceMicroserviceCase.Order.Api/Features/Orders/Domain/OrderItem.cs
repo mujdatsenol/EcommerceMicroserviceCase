@@ -1,4 +1,5 @@
 using EcommerceMicroserviceCase.Order.Api.Repositories;
+using Newtonsoft.Json;
 
 namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Domain;
 
@@ -12,5 +13,6 @@ public class OrderItem : BaseEntity
     public decimal UnitPrice { get; set; }
     public decimal Subtotal { get; set; }
 
+    [JsonIgnore]
     public Order Order { get; set; } = default!;
 }

@@ -1,6 +1,50 @@
-@HostAddress = http://localhost:5265
+@Host = http://localhost:7002
+@Root = api
+@OrderEndpoint = orders
 
-GET {{HostAddress}}/weatherforecast/
+POST {{Host}}/{{Root}}/{{OrderEndpoint}}
 Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{
+  "customerName": "Ahmet",
+  "customerSurname": "Yılmaz",
+  "customerEmail": "ahmet.yilmaz@domain.com",
+  "orderItems": [
+    {
+      "productId": "08dd1301-6e1d-5f51-0000-000000000000",
+      "productName": "Kazak",
+      "productDescription": "Kazak açıklaması",
+      "quantity": 2,
+      "unitPrice": 799.99
+    },
+    {
+      "productId": "08dd1301-6e1d-6a1e-0000-000000000000",
+      "productName": "Hırka",
+      "productDescription": "Hırka açıklaması",
+      "quantity": 3,
+      "unitPrice": 1299.99
+    },
+    {
+      "productId": "08dd1301-6e1d-6a2b-0000-000000000000",
+      "productName": "Pantolon",
+      "productDescription": "Pantolon açıklaması",
+      "quantity": 2,
+      "unitPrice": 950.3
+    }
+  ]
+}
+
+###
+
+GET {{Host}}/{{Root}}/{{OrderEndpoint}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+###
+
+GET {{Host}}/{{Root}}/{{OrderEndpoint}}/08dd1313-335c-4353-0000-000000000000
+Accept: application/json
+Content-Type: application/json; charset=utf-8
 
 ###

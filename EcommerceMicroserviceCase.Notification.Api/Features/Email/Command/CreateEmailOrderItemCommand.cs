@@ -6,4 +6,4 @@ public record CreateEmailOrderItemCommand(
     string? ProductDescription,
     int Quantity,
     decimal UnitPrice,
-    decimal SubTotal);
+    decimal Subtotal);

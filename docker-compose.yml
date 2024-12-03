@@ -132,7 +132,7 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:${STOCK_API_PORT}
       ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
     command: >
-      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_STOCK_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Stock.Api.dll"
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_STOCK_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Stock.Api.dll"
 
   order-api:
     build:
@@ -162,7 +162,7 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:${ORDER_API_PORT}
       ASPNETCORE_ENVIRONMENT: Development
     command: >
-      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_ORDER_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Order.Api.dll"
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_ORDER_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Order.Api.dll"
 
   notification-api:
     build:
@@ -192,7 +192,7 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:${NOTIFICATION_API_PORT}
       ASPNETCORE_ENVIRONMENT: Development
     command: >
-      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Notification.Api.dll"
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Notification.Api.dll"
 
 volumes:
   postgres-db-stock-data:

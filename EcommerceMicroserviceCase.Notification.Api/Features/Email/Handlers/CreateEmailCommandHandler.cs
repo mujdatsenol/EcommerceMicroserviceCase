@@ -32,7 +32,7 @@ public class CreateEmailCommandHandler(
             await repository.AddAsync(email, cancellationToken);
             await repository.SaveChangesAsync(cancellationToken);
             
-            Log.Information($"Email created. Id: {email.Id}");
+            Log.Information($"E-posta oluşturuldu. Id: {email.Id}");
         
             return ServiceResult<Guid>.SuccessAsCreated(mailId, $"/api/emails/{mailId}");
         }
