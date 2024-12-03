@@ -68,7 +68,7 @@ Bütün api endpointleri scalar aracılığı ile görülebilir.
 ```
 
 ```json
-  {
+{
   "customerName": "Ahmet",
   "customerSurname": "Yılmaz",
   "customerEmail": "ahmet.yilmaz@domain.com",
