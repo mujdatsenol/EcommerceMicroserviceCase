@@ -1,0 +1,206 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.7-management
+    container_name: rabbitmq
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+  postgres-db-stock:
+    image: postgres:17
+    container_name: ${POSTGRES_DB_STOCK_HOST}
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db-stock-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_STOCK_NAME}
+      POSTGRES_USER: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+
+  postgres-db-order:
+    image: postgres:17
+    container_name: ${POSTGRES_DB_ORDER_HOST}
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-db-order-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_ORDER_NAME}
+      POSTGRES_USER: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+
+  postgres-db-notification:
+    image: postgres:17
+    container_name: ${POSTGRES_DB_NOTIFICATION_HOST}
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-db-notification-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_NOTIFICATION_NAME}
+      POSTGRES_USER: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: postgres-admin-ui
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "8888:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres-db-stock
+      - postgres-db-order
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_USERNAME}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.5
+    container_name: elasticsearch
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.5
+    container_name: kibana
+    restart: always
+    networks:
+      - ecommerce_network
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
+      - ELASTICSEARCH_USERNAME=kibana_system
+
+  stock-api:
+    build:
+      context: .
+      dockerfile: EcommerceMicroserviceCase.Stock.Api/Dockerfile
+    container_name: stock-api
+    networks:
+      - ecommerce_network
+    ports:
+      - "${STOCK_API_PORT}:${STOCK_API_PORT}"
+    depends_on:
+      - postgres-db-stock
+      - rabbitmq
+      - elasticsearch
+    environment:
+      POSTGRES_DB_HOST: ${POSTGRES_DB_STOCK_HOST}
+      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+      POSTGRES_DB_NAME: ${POSTGRES_DB_STOCK_NAME}
+      RABBITMQ__HOSTNAME: ${RABBITMQ_HOST}
+      RABBITMQ__PORT: ${RABBITMQ_PORT}
+      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
+      API_PORT: ${STOCK_API_PORT}
+      ASPNETCORE_URLS: http://0.0.0.0:${STOCK_API_PORT}
+      ASPNETCORE_ENVIRONMENT: Development # Docker da Scalar aktif olması için gerekli. Bütün environment ler de çalışacak şekilde ayarlansa bile sadece development mod da aktif oluyor.
+    command: >
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_STOCK_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Stock.Api.dll"
+
+  order-api:
+    build:
+      context: .
+      dockerfile: EcommerceMicroserviceCase.Order.Api/Dockerfile
+    container_name: order-api
+    networks:
+      - ecommerce_network
+    ports:
+      - "${ORDER_API_PORT}:${ORDER_API_PORT}"
+    depends_on:
+      - postgres-db-order
+      - rabbitmq
+      - elasticsearch
+    environment:
+      POSTGRES_DB_HOST: ${POSTGRES_DB_ORDER_HOST}
+      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+      POSTGRES_DB_NAME: ${POSTGRES_DB_ORDER_NAME}
+      RABBITMQ__HOSTNAME: ${RABBITMQ_HOST}
+      RABBITMQ__PORT: ${RABBITMQ_PORT}
+      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
+      API_PORT: ${ORDER_API_PORT}
+      ASPNETCORE_URLS: http://0.0.0.0:${ORDER_API_PORT}
+      ASPNETCORE_ENVIRONMENT: Development
+    command: >
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_ORDER_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Order.Api.dll"
+
+  notification-api:
+    build:
+      context: .
+      dockerfile: EcommerceMicroserviceCase.Notification.Api/Dockerfile
+    container_name: notification-api
+    networks:
+      - ecommerce_network
+    ports:
+      - "${NOTIFICATION_API_PORT}:${NOTIFICATION_API_PORT}"
+    depends_on:
+      - postgres-db-notification
+      - rabbitmq
+      - elasticsearch
+    environment:
+      POSTGRES_DB_HOST: ${POSTGRES_DB_NOTIFICATION_HOST}
+      POSTGRES_DB_USERNAME: ${POSTGRES_DB_DEFAULT_USERNAME}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_DB_DEFAULT_PASSWORD}
+      POSTGRES_DB_NAME: ${POSTGRES_DB_NOTIFICATION_NAME}
+      RABBITMQ__HOSTNAME: ${RABBITMQ_HOST}
+      RABBITMQ__PORT: ${RABBITMQ_PORT}
+      RABBITMQ__USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ__PASSWORD: ${RABBITMQ_PASSWORD}
+      LOGGEROPTION__OPENSEARCHURL: ${ELASTICSEARCH_URL}
+      LOGGEROPTION__INDEXFORMAT: ${ELASTICSEARCH_INDEX_FORMAT}
+      API_PORT: ${NOTIFICATION_API_PORT}
+      ASPNETCORE_URLS: http://0.0.0.0:${NOTIFICATION_API_PORT}
+      ASPNETCORE_ENVIRONMENT: Development
+    command: >
+      /bin/bash -c "/wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Notification.Api.dll"
+
+volumes:
+  postgres-db-stock-data:
+  postgres-db-order-data:
+  postgres-db-notification-data:
+  pgadmin-data:
+  elasticsearch-data:
+
+networks:
+  ecommerce_network:
+    driver: bridge

@@ -1,0 +1,15 @@
+@Host = http://localhost:7003
+@Root = api
+@EmailEndpoint = emails
+
+GET {{Host}}/{{Root}}/{{EmailEndpoint}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+###
+
+GET {{Host}}/{{Root}}/{{EmailEndpoint}}/08dd1313-335c-4353-0000-000000000000
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+###
