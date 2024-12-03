@@ -41,4 +41,4 @@ COPY EcommerceMicroserviceCase.Notification.Api/wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 # Veritabanının hazır olmasını bekleyip API servisinin başlatılması
-CMD /wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 -- dotnet EcommerceMicroserviceCase.Notification.Api.dll
+CMD /wait-for-it.sh ${POSTGRES_DB_NOTIFICATION_HOST}:5432 --timeout=0 -- /wait-for-it.sh ${RABBITMQ_HOST}:${RABBITMQ_PORT} -- dotnet EcommerceMicroserviceCase.Notification.Api.dll

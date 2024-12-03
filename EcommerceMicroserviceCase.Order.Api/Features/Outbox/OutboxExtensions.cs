@@ -12,7 +12,7 @@ public static class OutboxExtensions
                     scopeFactory: scope,
                     eventType: "OrderCreated",
                     exchangeName: "create-order-exchange",
-                    routingKey: "create-order-queue",
+                    routingKey: String.Empty, 
                     dlqExchange: "dle-create-order-exchange",
                     dlqRoutingKey: "dlq-create-order-queue");
             throw new InvalidOperationException($"The outbox messaging has not been configured.");

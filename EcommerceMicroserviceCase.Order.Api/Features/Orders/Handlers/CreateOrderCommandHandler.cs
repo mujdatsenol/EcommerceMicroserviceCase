@@ -1,6 +1,4 @@
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using AutoMapper;
 using EcommerceMicroserviceCase.Order.Api.Features.Orders.Commands;
 using EcommerceMicroserviceCase.Order.Api.Features.Outbox.Commands;
@@ -10,6 +8,7 @@ using EcommerceMicroserviceCase.Shared;
 using EcommerceMicroserviceCase.Shared.Messaging;
 using MassTransit;
 using MediatR;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace EcommerceMicroserviceCase.Order.Api.Features.Orders.Handlers;
@@ -48,15 +47,9 @@ public class CreateOrderCommandHandler(
             Log.Information($"Order created. Id: {newOrder.Id}");
         
             // Outbox Message tablosuna diğer servislere gidecek mesaj için kayıt atılıyor.
+            var outboxMessage = JsonConvert.SerializeObject(newOrder);
             var outbox = await mediator.Send(
-                new AddOutboxMessageCommand(
-                    "OrderCreated",
-                    JsonSerializer.Serialize(newOrder,
-                        options: new JsonSerializerOptions
-                        {
-                            ReferenceHandler = ReferenceHandler.Preserve,
-                        })),
-                cancellationToken);
+                new AddOutboxMessageCommand("OrderCreated",outboxMessage), cancellationToken);
             if (outbox.IsFail)
             {
                 string errorMessage = $"Outbox message could not be created for Order Created. Order Id: {newOrder.Id}";

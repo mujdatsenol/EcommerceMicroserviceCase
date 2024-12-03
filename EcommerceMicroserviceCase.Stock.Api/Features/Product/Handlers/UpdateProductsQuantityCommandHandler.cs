@@ -15,13 +15,14 @@ public class UpdateProductsQuantityCommandHandler(IRepository<Domain.Product> re
     {
         try
         {
+            var Ids = request.Products.Keys.ToList();
             var products = await repository
-                .GetByQueryAsync(q => request.Products.ContainsKey(q.Id), cancellationToken: cancellationToken);
+                .GetByQueryAsync(q => Ids.Contains(q.Id), cancellationToken: cancellationToken);
 
             foreach (var product in products)
             {
                 product.Quantity -= request.Products[product.Id];
-                Log.Information($"Product quantity updated. Id: {product.Id} - Quantity: {product.Quantity}");
+                Log.Information($"Ürünün stok değeri değişti. Id: {product.Id} - Yeni Stok: {product.Quantity}");
             }
         
             await repository.UpdateRangeAsync(products, cancellationToken);

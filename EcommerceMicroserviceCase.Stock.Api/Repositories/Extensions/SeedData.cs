@@ -79,6 +79,15 @@ public static class SeedData
                     Quantity = 500,
                     Created = DateTimeOffset.UtcNow
                 },
+                new()
+                {
+                    Id = Guid.Parse("08dd1311-d9e5-19eb-0000-000000000000"),
+                    Name = "Test Ürün",
+                    Description = "Test ürün açıklaması",
+                    Price = 125.75m,
+                    Quantity = 78,
+                    Created = DateTimeOffset.UtcNow
+                }
             };
             
             dbContext.Products.AddRange(products);
